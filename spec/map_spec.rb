@@ -7,23 +7,23 @@ describe "map properties" do
   end
 
   it "should store title" do
-    @map.title.should == "Gorges State Park, NC"
+    @map.title.should == "Ilha Grande, RJ"
   end
 
-  it "should have 5 annotations" do
-    @map.annotations.count.should == 5
+  it "should have 3 annotations" do
+    @map.annotations.count.should == 3
   end
 
   it "should convert annotation hashes to MapViewAnnotations" do
     @map.annotations.each do |annotation|
-      annotation.class.to_s.should == "NSKVONotifying_MapScreenAnnotation"
+      annotation.class.to_s.should == "ProMotion::MapScreenAnnotation" #"NSKVONotifying_MapScreenAnnotation" 
     end
   end
 
   it "should have a default red colored pin" do
     @map.annotations.each do |annotation|
       annotation_view = @map.annotation_view(@map.mapview, annotation)
-      annotation_view.pinColor.should == MKPinAnnotationColorRed
+      annotation_view.annotation.pin_color.should == :red
     end
   end
 
@@ -34,7 +34,7 @@ describe "map properties" do
       title: "Something Else"
     }
     @map.add_annotation(ann)
-    @map.annotations.count.should == 6
+    @map.annotations.count.should == 4
   end
 
   it "should add an annotation with a different pin color symbol" do
@@ -43,9 +43,9 @@ describe "map properties" do
       latitude: 35.092520495652,
       title: "Green Pin",
       pin_color: :green
-    })
+    },@map.view)
     annotation_view = @map.annotation_view(@map.mapview, ann)
-    annotation_view.pinColor.should == MKPinAnnotationColorGreen
+    annotation_view.annotation.pin_color.should == :green
   end
 
   it "should add an annotation with a different pin color constant" do
@@ -53,10 +53,10 @@ describe "map properties" do
       longitude: -82.966993558105,
       latitude: 35.092520495652,
       title: "Purple Pin",
-      pin_color: MKPinAnnotationColorPurple
-    })
+      pin_color: UIColor.purpleColor
+    },@map.view)
     annotation_view = @map.annotation_view(@map.mapview, ann)
-    annotation_view.pinColor.should == MKPinAnnotationColorPurple
+    annotation_view.annotation.pin_color.should == UIColor.purpleColor
   end
 
   it "should add an annotation with a coordinate" do
@@ -65,7 +65,7 @@ describe "map properties" do
       title: "A Coordinate"
     }
     @map.add_annotation(ann)
-    @map.annotations.count.should == 6
+    @map.annotations.count.should == 4
   end
 
   it "should return custom annotation parameters" do
@@ -112,25 +112,25 @@ describe "map properties" do
   end
 
   it "should allow ruby counterparts to MKMapView to be used" do
-    @map.type.should == MKMapTypeStandard
-    @map.type = MKMapTypeHybrid
-    @map.map.mapType.should == MKMapTypeHybrid
+    @map.deceleration_mode.should == 1 # RMMapDecelerationFast
+    @map.deceleration_mode = 2 # RMMapDecelerationOff
+    @map.map.decelerationMode.should == 2 # RMMapDecelerationOff
 
-    @map.zoom_enabled?.should == true
-    @map.zoom_enabled = false
-    @map.zoom_enabled?.should == false
+    @map.dragging_enabled?.should == true
+    @map.dragging_enabled = false
+    @map.dragging_enabled?.should == false
 
-    @map.scroll_enabled?.should == true
-    @map.scroll_enabled = false
-    @map.scroll_enabled?.should == false
+    @map.bouncing_enabled?.should == false
+    @map.bouncing_enabled = true
+    @map.bouncing_enabled?.should == true
 
-    @map.pitch_enabled?.should == true
-    @map.pitch_enabled = false
-    @map.pitch_enabled?.should == false
+    @map.clustering_enabled?.should == false
+    @map.clustering_enabled = true
+    @map.clustering_enabled?.should == true
 
-    @map.rotate_enabled?.should == true
-    @map.rotate_enabled = false
-    @map.rotate_enabled?.should == false
+    # @map.rotate_enabled?.should == true
+    # @map.rotate_enabled = false
+    # @map.rotate_enabled?.should == false
   end
 
 end

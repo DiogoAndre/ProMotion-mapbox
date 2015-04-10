@@ -22,9 +22,9 @@ describe "ProMotion::TestMapScreen functionality" do
     ann = default_annotation.merge({
       image: UIImage.imageNamed("test.png")
     })
-    map_screen.annotations.count.should == 5
+    map_screen.annotations.count.should == 3
     map_screen.add_annotation ann
-    map_screen.set_region map_screen.region(coordinate: map_screen.annotations.last.coordinate, span: [0.05, 0.05])
+    map_screen.set_region map_screen.region(map_screen.annotations.last.coordinate, 5)
   end
 
   after do
@@ -37,8 +37,8 @@ describe "ProMotion::TestMapScreen functionality" do
 
   it "should start the map in the correct location" do
     center_coordinate = map_screen.center
-    center_coordinate.latitude.should.be.close 35.090648651123, 0.02
-    center_coordinate.longitude.should.be.close -82.965972900391, 0.02
+    center_coordinate.latitude.should.be.close -23.156386, 0.02
+    center_coordinate.longitude.should.be.close -44.235521, 0.02
   end
 
   it "should move the map center" do
@@ -52,31 +52,32 @@ describe "ProMotion::TestMapScreen functionality" do
   end
 
   it "should select an annotation" do
-    map_screen.selected_annotations.should == nil
+    map_screen.selected_annotation.should == nil
     map_screen.select_annotation map_screen.annotations.first
     wait 0.75 do
-      map_screen.selected_annotations.count.should == 1
+      map_screen.selected_annotation == map_screen.annotations.first
     end
+    map_screen.deselect_annotation map_screen.annotations.first
   end
 
   it "should select an annotation by index" do
-    map_screen.selected_annotations.should == nil
-    map_screen.select_annotation_at 2
+    map_screen.selected_annotation.should == nil
+    map_screen.select_annotation_at 1
     wait 0.75 do
-      map_screen.selected_annotations.count.should == 1
-      map_screen.selected_annotations[0].should == map_screen.promotion_annotation_data[2]
-    end
+      map_screen.selected_annotation.should == map_screen.annotations[1]
+      map_screen.deselect_annotation map_screen.annotations.first
+    end    
   end
 
   it "should select another annotation and check that the title is correct" do
-    map_screen.selected_annotations.should == nil
+    map_screen.selected_annotation.should == nil
     map_screen.select_annotation map_screen.annotations[1]
     wait 0.75 do
-      map_screen.selected_annotations.count.should == 1
+      map_screen.selected_annotation == map_screen.annotations.first
     end
 
-    map_screen.selected_annotations.first.title.should == "Turtleback Falls"
-    map_screen.selected_annotations.first.subtitle.should == "Nantahala National Forest"
+    map_screen.selected_annotation.title.should == "Praia de Lopes Mendes"
+    map_screen.selected_annotation.subtitle.should == "Ilha Grande - SE"
 
   end
 
@@ -86,9 +87,9 @@ describe "ProMotion::TestMapScreen functionality" do
       # map_screen.selected_annotations.count.should == 1
     end
 
-    map_screen.deselect_annotations
+    map_screen.deselect_annotation
     wait 0.75 do
-      map_screen.selected_annotations.should == nil
+      map_screen.selected_annotation.should == nil
     end
   end
 
@@ -98,11 +99,12 @@ describe "ProMotion::TestMapScreen functionality" do
       latitude: 35.092520895652,
       title: "Something Else"
     }
-    map_screen.annotations.count.should == 5
+    map_screen.annotations.count.should == 3
     map_screen.add_annotation ann
-    map_screen.annotations.count.should == 6
-    map_screen.set_region map_screen.region(coordinate: map_screen.annotations.last.coordinate, span: [0.05, 0.05])
+    map_screen.annotations.count.should == 4
+    map_screen.set_region map_screen.region(map_screen.annotations.last.coordinate, 5)
     map_screen.select_annotation map_screen.annotations.last
+    map_screen.deselect_annotation
   end
 
   it "should be able to overwrite all annotations" do
@@ -115,18 +117,14 @@ describe "ProMotion::TestMapScreen functionality" do
       latitude: 35.2187218,
       title: "My Cool Pin"
     }]
-    map_screen.annotations.count.should == 5
+    map_screen.annotations.count.should == 3
     map_screen.add_annotations anns
     map_screen.annotations.count.should == 2
   end
 
   it "should add an image based annotation" do
     add_image_annotation
-    map_screen.annotations.count.should == 6
-
-    # Checking that it conforms to the MKAnnotation protocol manually since this doesn't work in iOS 7:
-    #  map_screen.annotations.last.conformsToProtocol(MKAnnotation).should.be.true
-    # See this 8 month old bug - https://github.com/siuying/rubymotion-protocol-bug
+    map_screen.annotations.count.should == 4
 
     checking = map_screen.annotations.last
     %w(title subtitle coordinate).each do |method|
@@ -136,32 +134,33 @@ describe "ProMotion::TestMapScreen functionality" do
 
   it "should select an image annotation" do
     add_image_annotation
-    map_screen.selected_annotations.should == nil
+    map_screen.selected_annotation.should == nil
     map_screen.select_annotation map_screen.annotations.last
     wait 0.75 do
-      map_screen.selected_annotations.count.should == 1
+      map_screen.selected_annotation == map_screen.annotations.last
+      map_screen.deselect_annotation
     end
   end
 
   it "should select an image annotation by index" do
     add_image_annotation
-    map_screen.selected_annotations.should == nil
-    map_screen.select_annotation_at 5
+    map_screen.selected_annotation.should == nil
+    map_screen.select_annotation_at 3
     wait 0.75 do
-      map_screen.selected_annotations.count.should == 1
-      map_screen.selected_annotations[0].should == map_screen.promotion_annotation_data[5]
+      map_screen.selected_annotation.should == map_screen.annotations[3]
+      map_screen.deselect_annotation
     end
   end
 
   it "should select an image annotation and check that the title is correct" do
     add_image_annotation
-    map_screen.selected_annotations.should == nil
-    map_screen.select_annotation map_screen.annotations[5]
+    map_screen.selected_annotation.should == nil
+    map_screen.select_annotation map_screen.annotations[3]
     wait 0.75 do
-      map_screen.selected_annotations.count.should == 1
+      map_screen.selected_annotation.should == map_screen.annotations[3]
     end
-    map_screen.selected_annotations.first.title.should == "My Cool Image Pin"
-    map_screen.selected_annotations.first.subtitle.should == "Image pin subtitle"
+    map_screen.selected_annotation.title.should == "My Cool Image Pin"
+    map_screen.selected_annotation.subtitle.should == "Image pin subtitle"
   end
 
   it "should allow setting a leftCalloutAccessoryView" do
@@ -227,18 +226,18 @@ describe "ProMotion::TestMapScreen functionality" do
     v.rightCalloutAccessoryView.buttonType.should == UIButtonTypeContactAdd
   end
 
-  it 'should allow you to set different properties of MKMapView' do
-    map_screen.map.mapType.should == MKMapTypeStandard
-    map_screen.map.mapType = MKMapTypeHybrid
-    map_screen.map.mapType.should == MKMapTypeHybrid
+  it 'should allow you to set different properties of RMMapView' do
+    map_screen.map.hideAttribution.should == false
+    map_screen.map.hideAttribution = true
+    map_screen.map.hideAttribution.should == true
 
-    map_screen.map.isZoomEnabled.should == true
-    map_screen.map.zoomEnabled = false
-    map_screen.map.isZoomEnabled.should == false
+    map_screen.map.draggingEnabled.should == true
+    map_screen.map.draggingEnabled = false
+    map_screen.map.draggingEnabled.should == false
 
-    map_screen.map.isRotateEnabled.should == true
-    map_screen.map.rotateEnabled = false
-    map_screen.map.isRotateEnabled.should == false
+    map_screen.map.bouncingEnabled.should == false
+    map_screen.map.bouncingEnabled = true
+    map_screen.map.bouncingEnabled.should == true
   end
 
   it "can lookup a location with a CLLocation" do
