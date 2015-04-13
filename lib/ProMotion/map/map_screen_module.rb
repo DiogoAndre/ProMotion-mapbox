@@ -337,6 +337,10 @@ module ProMotion
       end
     end
 
+    def empty_cache
+      map.removeAllCachedImages
+    end
+
     ########## Mapbox methods #################
     def mapView(map_view, layerForAnnotation: annotation)
       annotation_view(map_view, annotation)
@@ -367,6 +371,9 @@ module ProMotion
       end
     end
 
+    def tapOnCalloutAccessoryControl(control, forAnnotation: annotation, onMap: map)
+      control.sendActionsForControlEvents(UIControlEventTouchUpInside)
+    end
     ########## Cocoa touch Ruby counterparts #################
 
     def deceleration_mode
