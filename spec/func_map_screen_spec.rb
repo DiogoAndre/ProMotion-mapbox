@@ -42,12 +42,13 @@ describe "ProMotion::TestMapScreen functionality" do
   end
 
   it "should move the map center" do
-    map_screen.center = {latitude: 35.07496, longitude: -82.95916, animated: true}
-
-    wait 0.75 do
-      center_coordinate = map_screen.center
-      center_coordinate.latitude.should.be.close 35.07496, 0.02
-      center_coordinate.longitude.should.be.close -82.95916, 0.02
+    wait 0.05 do
+      map_screen.center = {latitude: -23.256386, longitude: -44.235521, animated: true}
+      wait 0.75 do
+        center_coordinate = map_screen.center
+        center_coordinate.latitude.should.be.close -23.256386, 0.02
+        center_coordinate.longitude.should.be.close -44.235521, 0.02
+      end
     end
   end
 

@@ -12,7 +12,6 @@ module ProMotion
       self.view = nil
       self.view = RMMapView.alloc.initWithFrame(self.view.bounds, andTilesource:@tileSource)
       self.view.delegate = self
-
       check_annotation_data
       @promotion_annotation_data = []
       set_up_tap_to_add
@@ -31,11 +30,12 @@ module ProMotion
     def view_will_appear(animated)
       super
       update_annotation_data
+      set_up_start_center
     end
 
     def view_did_appear(animated)
       super
-      set_up_start_position
+      set_up_start_region
     end
     
     def check_annotation_data
@@ -185,9 +185,21 @@ module ProMotion
       set_region(region, animated:false)
     end
 
-    def set_up_start_position
+    def set_up_start_region
       if self.class.respond_to?(:get_start_position) && self.class.get_start_position
-        self.set_start_position self.class.get_start_position_params
+        start_params = self.class.get_start_position_params
+        self.set_start_position start_params unless start_params[:radius].nil?
+      end
+    end
+    
+    def set_up_start_center
+      if self.class.respond_to?(:get_start_position) && self.class.get_start_position
+        start_params = self.class.get_start_position_params
+        start_params[:zoom] ||= 5
+        self.view.setZoom(start_params[:zoom], atCoordinate: 
+          CLLocationCoordinate2D.new(start_params[:latitude], start_params[:longitude]), 
+          animated: false
+        )
       end
     end
 
@@ -343,6 +355,9 @@ module ProMotion
 
     ########## Mapbox methods #################
     def mapView(map_view, layerForAnnotation: annotation)
+      if annotation.is_a?(RMAnnotation)
+        annotation = MapScreenAnnotation.new_with_rmannotation(annotation,self.view)
+      end
       annotation_view(map_view, annotation)
     end
 

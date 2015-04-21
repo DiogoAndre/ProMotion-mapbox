@@ -5,7 +5,7 @@ class TestMapScreen < PM::MapScreen
   mapbox_setup access_token: "YOU_MAPBOX_ACCESS_TOKEN",
     tile_source: "mylogin.map"
 
-  start_position latitude: -23.156386, longitude: -44.235521, radius: 75
+  start_position latitude: -23.156386, longitude: -44.235521, radius: 75, zoom: 5
   title "Ilha Grande, RJ"
   tap_to_add length: 1.5, annotation: {animates_drop: false, title: "Uma nova praia?"}
 
