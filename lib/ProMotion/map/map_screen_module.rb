@@ -23,7 +23,7 @@ module ProMotion
       else
         PM.logger.error "Missing Mapbox setup data."
       end
-      RMConfiguration.sharedInstance.setAccessToken(setup_params[:access_token])
+      RMConfiguration.sharedInstance.setAccessToken(setup_params[:access_token]) if RMConfiguration.sharedInstance.accessToken.nil?
       @tileSource = RMMapboxSource.alloc.initWithMapID(setup_params[:tile_source])
     end
     
