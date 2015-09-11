@@ -2,12 +2,10 @@ class TestMapScreen < PM::MapScreen
   attr_accessor :infinite_loop_points, :request_complete, :action_called
   attr_accessor :got_will_change_region, :got_on_change_region
 
-  mapbox_setup access_token: "YOU_MAPBOX_ACCESS_TOKEN",
-    tile_source: "mylogin.map"
-
-  start_position latitude: -23.156386, longitude: -44.235521, radius: 75, zoom: 5
-  title "Ilha Grande, RJ"
-  tap_to_add length: 1.5, annotation: {animates_drop: false, title: "Uma nova praia?"}
+  start_position latitude: -22.969368, longitude: -43.179837, radius: 10
+  title "Rio de Janeiro, Brasil"
+  map_style "mapbox-streets-v7"
+  tap_to_add length: 1.5, annotation: {animates_drop: false, title: "A new park?"}
 
   def on_load
     @action_called = false
@@ -21,25 +19,34 @@ class TestMapScreen < PM::MapScreen
 
   def annotation_data
     # Partial set of data from "GPS Map of Gorges State Park": http://www.hikewnc.info/maps/gorges-state-park/gps-map
-    @data ||= [
-    {
-      latitude: -23.156386,
-      longitude: -44.235521,
-      title: "Ilha Grande",
-      subtitle: "Parque Nacional da Ilha Grande",
-      image: UIImage.imageNamed("park2")
-    },{
+    @data ||= [{
       # Example of using :coordinate instead of :latitude & :longitude
-      coordinate: CLLocationCoordinate2DMake(-23.171329, -44.127505),
-      title: "Praia de Lopes Mendes",
-      subtitle: "Ilha Grande - SE",
-      pin_color: :red,
-      action: :my_action
+      coordinate: CLLocationCoordinate2DMake(-22.969368, -43.179837),
+      title: "Praia de Copacabana",
+      subtitle: "Rio de Janeiro",
+      left_accessory: UIButton.buttonWithType(3),
     },{
-      longitude: -44.166854,
-      latitude: -23.140548,
-      title: "Vila do Abraão",
-      maki_icon: 'ferry'
+      longitude: -43.285188,
+      latitude: -22.945641,
+      title: "Floresta da Tijuca",
+      subtitle: "Floresta Nacional da Tijuca",
+      image: "park2",
+      left_action: :my_action
+    },{
+      longitude: -43.156084,
+      latitude: -22.949318,
+      title: "Pão de Açucar",
+      subtitle: "Sugar Loaf",
+      right_action: :my_action,
+    },{
+      longitude: -43.175977,
+      latitude: -22.909438,
+      title: "Teatro Municipal",
+    },{
+      longitude: -43.179191,
+      latitude: -22.915285,
+      title: "Escadaria Selaron",
+      subtitle: "Lapa",
     }]
   end
 

@@ -20,5 +20,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "motion-cocoapods"
   spec.add_development_dependency "motion-stump", "~> 0.3"
   spec.add_development_dependency "motion-redgreen", "~> 0.1"
+  spec.add_development_dependency "motion_print"
   spec.add_development_dependency "rake"
 end
