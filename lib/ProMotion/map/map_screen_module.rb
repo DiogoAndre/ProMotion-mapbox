@@ -2,9 +2,9 @@ module ProMotion
   module MapScreenModule
 
     PIN_COLORS = {
-      red: MKPinAnnotationColorRed,
-      green: MKPinAnnotationColorGreen,
-      purple: MKPinAnnotationColorPurple
+      red: UIColor.redColor,
+      green: UIColor.greenColor,
+      purple: UIColor.purpleColor
     }
 
     def screen_setup
