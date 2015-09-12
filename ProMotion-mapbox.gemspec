@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |spec|
   spec.name          = "ProMotion-mapbox"
-  spec.version       = "0.1.3"
+  spec.version       = "0.2.0"
   spec.authors       = ["Diogo Andre"]
   spec.email         = ["diogo@regattapix.com"]
   spec.description   = %q{Adds PM::MapScreen support to ProMotion, using Mapbox as map provider.}
