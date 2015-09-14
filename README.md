@@ -13,7 +13,9 @@ gem 'ProMotion-mapbox'
 ```ruby
 rake pod:install
 ```
+### Copy resource bundle
 
+There is a pending bug with CocoaPods where a Pod's resource bundle is not properly copied to the app's resource folder. As a workaround you must manually copy the ```Mapbox.bundle``` file from the ```vendor/Pods/Mapbox-iOS-SDK/``` folder to ```resources\```.
 
 ## Usage
 
